@@ -78,7 +78,11 @@ func WithCustom(url string, fn func(w http.ResponseWriter, r *http.Request)) *Re
 func (c *config) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if hand, ok := c.urls[r.URL.Path]; ok {
 		hand.handler(w, r)
+		return
 	}
+
+	w.WriteHeader(http.StatusNotFound)
+	_, _ = w.Write([]byte("Not found"))
 }
 
 type config struct {
